@@ -1,0 +1,89 @@
+{
+  "manifest_version": 3,
+  "name": "智能翻译助手",
+  "version": "1.0.0",
+  "description": "选中网页/PDF/视频中的文字即可翻译，支持多语言切换",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_title": "智能翻译助手"
+  },
+  "background": {
+    "service_worker": "service-worker-loader.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "js": [
+        "assets/webpage.ts-loader-CziXpQ88.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ],
+      "run_at": "document_end",
+      "all_frames": true
+    },
+    {
+      "js": [
+        "assets/subtitle.ts-loader-DUXlGon0.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ],
+      "run_at": "document_end",
+      "all_frames": true
+    },
+    {
+      "js": [
+        "assets/pdf.ts-loader-ClcZUwXw.js"
+      ],
+      "matches": [
+        "*://*/*.pdf",
+        "file://*/*.pdf",
+        "*://*/*.PDF"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "icons": {
+    "16": "public/icons/icon16.png",
+    "48": "public/icons/icon48.png",
+    "128": "public/icons/icon128.png"
+  },
+  "web_accessible_resources": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "resources": [
+        "assets/ui-DuttFev2.js",
+        "assets/translator-CEguSwgf.js",
+        "assets/languages-BF5jYfNl.js",
+        "assets/webpage.ts-DvGyWpvh.js",
+        "assets/subtitle.ts-CDFiL26f.js"
+      ],
+      "use_dynamic_url": false
+    },
+    {
+      "matches": [
+        "*://*/*",
+        "*://*/*",
+        "file://*/*"
+      ],
+      "resources": [
+        "assets/ui-DuttFev2.js",
+        "assets/translator-CEguSwgf.js",
+        "assets/languages-BF5jYfNl.js",
+        "assets/pdf.ts-BbHnhr-7.js"
+      ],
+      "use_dynamic_url": false
+    }
+  ]
+}

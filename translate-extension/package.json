@@ -1,0 +1,17 @@
+{
+  "name": "translate-extension",
+  "version": "1.0.0",
+  "description": "浏览器翻译插件 — 支持网页/PDF/视频字幕的选中翻译，可切换目标语言",
+  "type": "module",
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "vite build",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.270",
+    "typescript": "^5.9.3",
+    "vite": "^6.0.0",
+    "@crxjs/vite-plugin": "^2.0.0-beta.28"
+  }
+}
