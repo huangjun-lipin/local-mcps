@@ -1,0 +1,192 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.shinpr/mcp-local-rag",
+  "description": "本地RAG检索增强生成服务器 — 支持PDF/Word/Excel/PPT/图片等多种办公文档的多模态图文向量化检索，可配置本地或API embedding及多模态LLM图片描述",
+  "vendor": "Shinsuke Kagawa",
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/shinpr/mcp-local-rag",
+    "source": "github"
+  },
+  "version": "0.15.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "mcp-local-rag",
+      "version": "0.15.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "BASE_DIR",
+          "description": "文档根目录（安全边界），默认为当前工作目录",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "DB_PATH",
+          "description": "LanceDB向量数据库路径，默认为 ./lancedb/",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "CACHE_DIR",
+          "description": "模型缓存目录，默认为 ./models/",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "MODEL_NAME",
+          "description": "Embedding模型名称（HuggingFace模型ID），默认为 Xenova/all-MiniLM-L6-v2",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "MAX_FILE_SIZE",
+          "description": "最大文件大小（字节），默认为 104857600（100MB）",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "RAG_MAX_DISTANCE",
+          "description": "搜索结果最大距离阈值，超过此值的结果将被过滤。值越低要求越严格（如0.5表示仅高相关性）",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "RAG_GROUPING",
+          "description": "质量过滤分组模式：'similar' 仅返回最相似组，'related' 包含关联组。不设置则不启用分组过滤",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "RAG_MAX_FILES",
+          "description": "搜索结果中保留的最大文件数，仅包含来自得分最高的前N个文件的chunk",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "CHUNK_MIN_LENGTH",
+          "description": "最小chunk长度（字符数，1-10000），默认50。短于此阈值的chunk在ingest时被过滤",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "RAG_DEVICE",
+          "description": "Embedder执行设备，默认为cpu。直接传递给ONNX Runtime，支持cpu/webgpu/dml等",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "RAG_HYBRID_WEIGHT",
+          "description": "混合搜索关键词权重（0.0-1.0），默认0.6。0=纯语义搜索，越高关键词匹配权重越大",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "EMBEDDING_PROVIDER",
+          "description": "Embedding后端类型：'local'（默认，本地Transformers.js模型）或 'api'（远程API）",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "EMBEDDING_API_BASE_URL",
+          "description": "Embedding API地址（当EMBEDDING_PROVIDER=api时必填），如 https://api.openai.com/v1/embeddings",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "EMBEDDING_API_KEY",
+          "description": "Embedding API密钥（当EMBEDDING_PROVIDER=api时必填）",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": true
+        },
+        {
+          "name": "EMBEDDING_API_MODEL",
+          "description": "Embedding API模型名（当EMBEDDING_PROVIDER=api时必填），如 text-embedding-3-small",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "VLM_API_BASE_URL",
+          "description": "多模态LLM API地址（图片描述功能需要），如 https://api.openai.com/v1/chat/completions",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        },
+        {
+          "name": "VLM_API_KEY",
+          "description": "多模态LLM API密钥（图片描述功能需要）",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": true
+        },
+        {
+          "name": "VLM_API_MODEL",
+          "description": "多模态LLM模型名（图片描述功能需要），如 gpt-4o、claude-3-opus、qwen-vl-max",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        }
+      ],
+      "features": {
+        "tools": {
+          "supported": true,
+          "list": [
+            "query_documents",
+            "ingest_file",
+            "ingest_data",
+            "read_chunk_neighbors",
+            "list_files",
+            "delete_file",
+            "status"
+          ]
+        },
+        "prompts": {
+          "supported": false
+        },
+        "resources": {
+          "supported": false
+        }
+      }
+    }
+  ],
+  "tags": [
+    "rag",
+    "vector-search",
+    "semantic-search",
+    "embeddings",
+    "local-ai",
+    "offline",
+    "privacy",
+    "document-search",
+    "pdf",
+    "word",
+    "excel",
+    "ppt",
+    "multimodal",
+    "vlm",
+    "cursor",
+    "claude-code",
+    "skills"
+  ],
+  "homepage": "https://github.com/shinpr/mcp-local-rag",
+  "documentation": "https://github.com/shinpr/mcp-local-rag#readme"
+}
