@@ -5,7 +5,7 @@
   (async () => {
     const { onExecute } = await import(
       /* @vite-ignore */
-      chrome.runtime.getURL("assets/subtitle.ts-CDFiL26f.js")
+      chrome.runtime.getURL("assets/subtitle.ts-DGjiQo9n.js")
     );
     onExecute?.({ perf: { injectTime, loadTime: performance.now() - injectTime } });
   })().catch(console.error);

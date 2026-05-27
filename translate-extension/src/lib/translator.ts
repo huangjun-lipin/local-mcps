@@ -3,7 +3,7 @@
 // Uses an OpenAI-compatible chat completions endpoint.
 // API config is read from chrome.storage.sync (set by the popup or default env).
 
-import { DEFAULT_TARGET_LANG } from './languages';
+import { DEFAULT_TARGET_LANG, getLanguage } from './languages';
 
 interface TranslateConfig {
   apiUrl: string;
@@ -49,12 +49,19 @@ export async function translate(text: string): Promise<string> {
     return '';
   }
 
-  const systemPrompt = `你是一个专业的翻译助手。将用户提供的文字翻译成目标语言。
-规则：
-1. 只输出翻译结果，不要添加任何解释、注释或元信息
-2. 保持原文的语气和风格
-3. 保留原文中的技术术语和专有名词的格式
-4. 如果是代码片段、数字、URL等，保持原样`;
+  // Resolve target language name for the prompt
+  const langInfo = getLanguage(config.targetLang);
+  const targetLangName = langInfo
+    ? `${langInfo.nativeName} (${langInfo.name})`
+    : config.targetLang;
+
+  const systemPrompt = `你是一个专业的翻译助手。你的任务是将用户提供的任何文字翻译成${targetLangName}。
+重要规则：
+1. 无论原文是什么语言，都必须翻译成${targetLangName}
+2. 只输出翻译结果，不要添加任何解释、注释或元信息
+3. 保持原文的语气和风格
+4. 保留原文中的技术术语和专有名词的格式
+5. 如果是代码片段、数字、URL等，保持原文不翻译`;
 
   const response = await fetch(config.apiUrl, {
     method: 'POST',
@@ -66,7 +73,7 @@ export async function translate(text: string): Promise<string> {
       model: config.model,
       messages: [
         { role: 'system', content: systemPrompt },
-        { role: 'user', content: `将以下文字翻译成目标语言，只输出翻译结果：\n\n${text}` },
+        { role: 'user', content: `请将以下文字翻译成${targetLangName}，只输出翻译结果：\n\n${text}` },
       ],
       max_tokens: 2000,
       temperature: 0.1,

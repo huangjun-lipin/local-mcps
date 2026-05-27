@@ -1,4 +1,4 @@
-import{d as p,s as b}from"./ui-DuttFev2.js";import"./translator-CEguSwgf.js";import"./languages-BF5jYfNl.js";let r=null,i=!1,d="",l=null;const v="__tr-subtitle-overlay__";function m(){return r||(r=document.createElement("div"),r.id=v,r.style.cssText=`
+import{d as p,s as b}from"./ui-CLjJVGjW.js";import"./translator-Bpc-3k6W.js";import"./languages-CXtdqP6-.js";let r=null,i=!1,d="",l=null;const v="__tr-subtitle-overlay__";function m(){return r||(r=document.createElement("div"),r.id=v,r.style.cssText=`
       all: initial;
       position: fixed;
       bottom: 80px;
