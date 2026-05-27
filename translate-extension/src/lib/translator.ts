@@ -52,7 +52,7 @@ export async function translate(text: string): Promise<string> {
   // Resolve target language name for the prompt
   const langInfo = getLanguage(config.targetLang);
   const targetLangName = langInfo
-    ? `${langInfo.nativeName} (${langInfo.name})`
+    ? `${langInfo.zhName}（${langInfo.nativeName}）`
     : config.targetLang;
 
   const systemPrompt = `你是一个专业的翻译助手。你的任务是将用户提供的任何文字翻译成${targetLangName}。

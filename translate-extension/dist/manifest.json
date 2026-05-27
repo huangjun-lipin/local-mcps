@@ -32,7 +32,7 @@
   "content_scripts": [
     {
       "js": [
-        "assets/webpage.ts-loader-Cyw_zJFe.js"
+        "assets/webpage.ts-loader-D2JIAuNR.js"
       ],
       "matches": [
         "<all_urls>"
@@ -42,7 +42,7 @@
     },
     {
       "js": [
-        "assets/subtitle.ts-loader-ByoKsK1b.js"
+        "assets/subtitle.ts-loader-DhDB7bI8.js"
       ],
       "matches": [
         "<all_urls>"
@@ -52,7 +52,7 @@
     },
     {
       "js": [
-        "assets/pdf.ts-loader-D1r7kFMZ.js"
+        "assets/pdf.ts-loader-B3ey2vJ_.js"
       ],
       "matches": [
         "*://*/*.pdf",
@@ -73,11 +73,11 @@
         "<all_urls>"
       ],
       "resources": [
-        "assets/ui-DGX6BH7_.js",
-        "assets/translator-Bpc-3k6W.js",
-        "assets/languages-CXtdqP6-.js",
-        "assets/webpage.ts-CAdu5Zj7.js",
-        "assets/subtitle.ts-Cv5-z5YR.js"
+        "assets/ui-DqoFrv1h.js",
+        "assets/translator-f8nY_rcK.js",
+        "assets/languages-s6Qk9-53.js",
+        "assets/webpage.ts-Ed5TPQJD.js",
+        "assets/subtitle.ts-CpzKjg4X.js"
       ],
       "use_dynamic_url": false
     },
@@ -88,10 +88,10 @@
         "file://*/*"
       ],
       "resources": [
-        "assets/ui-DGX6BH7_.js",
-        "assets/translator-Bpc-3k6W.js",
-        "assets/languages-CXtdqP6-.js",
-        "assets/pdf.ts-DgMsdm8a.js"
+        "assets/ui-DqoFrv1h.js",
+        "assets/translator-f8nY_rcK.js",
+        "assets/languages-s6Qk9-53.js",
+        "assets/pdf.ts-CfgMRLwv.js"
       ],
       "use_dynamic_url": false
     }

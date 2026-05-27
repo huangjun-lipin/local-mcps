@@ -1,4 +1,4 @@
-import{t as b}from"./translator-Bpc-3k6W.js";import{a as v}from"./languages-CXtdqP6-.js";let s=null,u=!1;const m="__translate-popup-style__";function y(){if(document.getElementById(m))return;const t=document.createElement("style");t.id=m,t.textContent=`
+import{t as b}from"./translator-f8nY_rcK.js";import{a as v}from"./languages-s6Qk9-53.js";let s=null,u=!1;const m="__translate-popup-style__";function y(){if(document.getElementById(m))return;const t=document.createElement("style");t.id=m,t.textContent=`
     .__tr-popup {
       all: initial;
       position: fixed;
