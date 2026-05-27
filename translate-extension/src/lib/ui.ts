@@ -53,16 +53,21 @@ export function injectStyles(): void {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 8px 14px;
-      background: #f7f7f7;
+      padding: 10px 16px;
+      background: #f8f8f8;
       border-bottom: 1px solid #eee;
       font-size: 12px;
       color: #666;
+      cursor: grab;
+      user-select: none;
+      -webkit-user-select: none;
     }
+    .__tr-popup-header:active { cursor: grabbing; }
     .__tr-popup-header-left {
       display: flex;
       align-items: center;
       gap: 6px;
+      pointer-events: none;
     }
     .__tr-popup-lang-tag {
       display: inline-block;
@@ -115,21 +120,27 @@ export function injectStyles(): void {
     .__tr-popup-error {
       color: #d93025;
       font-size: 13px;
-    }
-    .__tr-popup-source {
-      margin-bottom: 8px;
-      padding-bottom: 8px;
-      border-bottom: 1px dashed #e8e8e8;
-      color: #555;
-      font-size: 13px;
-      font-style: italic;
-      max-height: 120px;
-      overflow-y: auto;
       white-space: pre-wrap;
       word-break: break-word;
     }
+    .__tr-popup-source {
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed #e8e8e8;
+      color: #777;
+      font-size: 13px;
+      font-style: italic;
+      max-height: 140px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.6;
+    }
     .__tr-popup-result {
       color: #1a1a1a;
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.7;
     }
     .__tr-popup-copy {
       cursor: pointer;
@@ -137,9 +148,10 @@ export function injectStyles(): void {
       background: none;
       font-size: 12px;
       color: #1a73e8;
-      padding: 2px 6px;
+      padding: 3px 8px;
       border-radius: 4px;
-      margin-left: 8px;
+      margin-right: 6px;
+      pointer-events: auto;
     }
     .__tr-popup-copy:hover {
       background: #e8f0fe;
@@ -177,6 +189,38 @@ function positionPopup(popup: HTMLElement, anchorRect: DOMRect): void {
 
   popup.style.top = `${top}px`;
   popup.style.left = `${left}px`;
+}
+
+// ============================================
+// Drag helper
+// ============================================
+
+function makeDraggable(popup: HTMLElement, header: HTMLElement): void {
+  let startX = 0, startY = 0, origX = 0, origY = 0;
+  let dragging = false;
+
+  header.addEventListener('pointerdown', (ev: PointerEvent) => {
+    const target = ev.target as HTMLElement;
+    if (target && (target.classList.contains('__tr-popup-close') || target.classList.contains('__tr-popup-copy'))) return;
+    dragging = true;
+    startX = ev.clientX;
+    startY = ev.clientY;
+    origX = popup.offsetLeft;
+    origY = popup.offsetTop;
+    header.setPointerCapture(ev.pointerId);
+    ev.preventDefault();
+  });
+
+  header.addEventListener('pointermove', (ev: PointerEvent) => {
+    if (!dragging) return;
+    const dx = ev.clientX - startX;
+    const dy = ev.clientY - startY;
+    popup.style.left = Math.max(0, Math.min(window.innerWidth - popup.offsetWidth, origX + dx)) + 'px';
+    popup.style.top = Math.max(0, Math.min(window.innerHeight - popup.offsetHeight, origY + dy)) + 'px';
+  });
+
+  header.addEventListener('pointerup', () => { dragging = false; });
+  header.addEventListener('pointercancel', () => { dragging = false; });
 }
 
 // ============================================
@@ -220,6 +264,10 @@ function createPopup(sourceText: string, targetLangCode: string): HTMLDivElement
   // Close button
   popup.querySelector('.__tr-popup-close')?.addEventListener('click', () => dismiss());
 
+  // Make draggable
+  const header = popup.querySelector('.__tr-popup-header') as HTMLElement;
+  if (header) makeDraggable(popup, header);
+
   return popup;
 }
 
@@ -251,6 +299,10 @@ export async function showTranslationPopup(
   document.body.appendChild(popup);
   popupEl = popup;
   isLoading = true;
+
+  // Make draggable
+  const headerEl = popup.querySelector('.__tr-popup-header') as HTMLElement;
+  if (headerEl) makeDraggable(popup, headerEl);
 
   // Position near the selection or center of viewport
   const rect = anchorRect || getViewportCenter();
@@ -356,6 +408,10 @@ export function createResultPopup(
   // Close button
   popup.querySelector('.__tr-popup-close')?.addEventListener('click', () => dismiss());
 
+  // Make draggable
+  const headerR = popup.querySelector('.__tr-popup-header') as HTMLElement;
+  if (headerR) makeDraggable(popup, headerR);
+
   // Copy button
   const copyBtn = popup.querySelector('.__tr-popup-copy') as HTMLButtonElement | null;
   if (copyBtn) {
@@ -406,6 +462,10 @@ export function createErrorPopup(
   positionPopup(popup, anchorRect);
 
   popup.querySelector('.__tr-popup-close')?.addEventListener('click', () => dismiss());
+
+  // Make draggable
+  const headerE = popup.querySelector('.__tr-popup-header') as HTMLElement;
+  if (headerE) makeDraggable(popup, headerE);
 
   setTimeout(() => {
     document.addEventListener('mousedown', onOutsideClick, { once: true });
