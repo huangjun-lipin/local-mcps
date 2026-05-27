@@ -21,7 +21,7 @@ let isLoading = false;
 
 const POPUP_STYLE_ID = '__translate-popup-style__';
 
-function injectStyles(): void {
+export function injectStyles(): void {
   if (document.getElementById(POPUP_STYLE_ID)) return;
 
   const style = document.createElement('style');
@@ -315,6 +315,101 @@ function getViewportCenter(): DOMRect {
     300,
     0,
   );
+}
+
+/**
+ * Show a pre-translated result popup (no loading spinner).
+ * Used by the background context menu handler.
+ */
+export function createResultPopup(
+  sourceText: string,
+  translatedText: string,
+  anchorRect: DOMRect,
+): void {
+  dismiss();
+
+  const popup = document.createElement('div');
+  popup.className = '__tr-popup';
+
+  popup.innerHTML = `
+    <div class="__tr-popup-header">
+      <div class="__tr-popup-header-left">
+        <span>🌐 翻译</span>
+      </div>
+      <div>
+        <button class="__tr-popup-copy" title="复制翻译结果">📋 复制</button>
+        <button class="__tr-popup-close" title="关闭">×</button>
+      </div>
+    </div>
+    <div class="__tr-popup-body">
+      <div class="__tr-popup-source">${escapeHtml(sourceText.slice(0, 300))}${sourceText.length > 300 ? '…' : ''}</div>
+      <div class="__tr-popup-result">${escapeHtml(translatedText)}</div>
+    </div>
+  `;
+
+  document.body.appendChild(popup);
+  popupEl = popup;
+
+  // Position
+  positionPopup(popup, anchorRect);
+
+  // Close button
+  popup.querySelector('.__tr-popup-close')?.addEventListener('click', () => dismiss());
+
+  // Copy button
+  const copyBtn = popup.querySelector('.__tr-popup-copy') as HTMLButtonElement | null;
+  if (copyBtn) {
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(translatedText).catch(() => {});
+      copyBtn.textContent = '✅ 已复制';
+      setTimeout(() => { copyBtn.textContent = '📋 复制'; }, 2000);
+    });
+  }
+
+  // Click-outside listener
+  setTimeout(() => {
+    document.addEventListener('mousedown', onOutsideClick, { once: true });
+  }, 0);
+}
+
+/**
+ * Show an error popup.
+ */
+export function createErrorPopup(
+  sourceText: string,
+  errorMessage: string,
+  anchorRect: DOMRect,
+): void {
+  dismiss();
+
+  const popup = document.createElement('div');
+  popup.className = '__tr-popup';
+
+  popup.innerHTML = `
+    <div class="__tr-popup-header">
+      <div class="__tr-popup-header-left">
+        <span>🌐 翻译</span>
+      </div>
+      <div>
+        <button class="__tr-popup-close" title="关闭">×</button>
+      </div>
+    </div>
+    <div class="__tr-popup-body">
+      <div class="__tr-popup-source">${escapeHtml(sourceText.slice(0, 200))}</div>
+      <div class="__tr-popup-error">❌ ${escapeHtml(errorMessage)}</div>
+    </div>
+  `;
+
+  document.body.appendChild(popup);
+  popupEl = popup;
+
+  positionPopup(popup, anchorRect);
+
+  popup.querySelector('.__tr-popup-close')?.addEventListener('click', () => dismiss());
+
+  setTimeout(() => {
+    document.addEventListener('mousedown', onOutsideClick, { once: true });
+  }, 0);
 }
 
 /**

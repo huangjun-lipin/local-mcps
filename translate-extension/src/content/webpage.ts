@@ -102,4 +102,77 @@ function onKeyDown(e: KeyboardEvent): void {
 document.addEventListener('selectionchange', onSelectionChange);
 document.addEventListener('keydown', onKeyDown);
 
-// Clean up when the popup is clicked outside — already handled in ui.ts
+// ============================================
+// Messages from background (context menu / keyboard shortcut)
+// ============================================
+
+chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+  if (message.type === 'SHOW_TRANSLATION') {
+    // Pre-translated result from background (context menu)
+    showTranslationResult(
+      (message as { text: string; translation: string }).text,
+      (message as { text: string; translation: string }).translation,
+    ).catch(() => {});
+    sendResponse({ ok: true });
+    return true;
+  }
+
+  if (message.type === 'SHOW_TRANSLATION_ERROR') {
+    showTranslationError(
+      (message as { text: string; error: string }).text,
+      (message as { text: string; error: string }).error,
+    ).catch(() => {});
+    sendResponse({ ok: true });
+    return true;
+  }
+
+  if (message.type === 'TRANSLATE_CURRENT_SELECTION') {
+    // Keyboard shortcut — get selection and translate
+    const text = getSelectedText();
+    if (text.length >= MIN_SELECTION_LENGTH) {
+      const rect = getSelectionRect();
+      showTranslationPopup(text, rect).catch(() => {});
+    }
+    sendResponse({ ok: true });
+    return true;
+  }
+
+  return false;
+});
+
+// Listen for postMessage from injected scripts (keyboard shortcut fallback)
+window.addEventListener('message', (event) => {
+  if (event.source !== window) return;
+  const data = event.data as { type?: string; text?: string };
+  if (data?.type === '__TR_TRANSLATE_SELECTION__' && data?.text) {
+    const rect = getSelectionRect();
+    showTranslationPopup(data.text, rect).catch(() => {});
+  }
+});
+
+// ============================================
+// Helpers for showing pre-translated results
+// ============================================
+
+async function showTranslationResult(sourceText: string, translation: string): Promise<void> {
+  const { injectStyles, createResultPopup } = await import('../lib/ui');
+  injectStyles();
+  const rect = getSelectionRect() || getViewportCenter();
+  createResultPopup(sourceText, translation, rect);
+}
+
+async function showTranslationError(sourceText: string, error: string): Promise<void> {
+  const { injectStyles, createErrorPopup } = await import('../lib/ui');
+  injectStyles();
+  const rect = getSelectionRect() || getViewportCenter();
+  createErrorPopup(sourceText, error, rect);
+}
+
+function getViewportCenter(): DOMRect {
+  return new DOMRect(
+    window.innerWidth / 2 - 150,
+    window.innerHeight / 3,
+    300,
+    0,
+  );
+}

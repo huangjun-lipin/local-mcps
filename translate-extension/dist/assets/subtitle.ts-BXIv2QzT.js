@@ -1,0 +1,20 @@
+import{dismiss as p,showTranslationPopup as b}from"./ui-BtuDIj9F.js";import"./translator-Bpc-3k6W.js";import"./languages-CXtdqP6-.js";let r=null,i=!1,d="",l=null;const v="__tr-subtitle-overlay__";function m(){return r||(r=document.createElement("div"),r.id=v,r.style.cssText=`
+      all: initial;
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2147483647;
+      max-width: 720px;
+      padding: 8px 16px;
+      background: rgba(0,0,0,0.82);
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      border-radius: 8px;
+      text-align: center;
+      pointer-events: none;
+      display: none;
+      backdrop-filter: blur(4px);
+    `,document.body.appendChild(r)),r}function f(t){const e=m();e.textContent=t,e.style.display=""}function s(){r&&(r.style.display="none")}function h(t){if(!t.activeCues||t.activeCues.length===0)return"";const e=[];for(let n=0;n<t.activeCues.length;n++){const o=t.activeCues[n];o&&"text"in o&&e.push(o.text)}return e.join(" ").trim()}function y(){const t=h(this);if(!(!t||t===d)&&(d=t,i)){if(l&&l.source===t){f(l.result);return}chrome.runtime.sendMessage({type:"TRANSLATE_SUBTITLE",text:t}).then(e=>{e!=null&&e.translation&&(l={source:t,result:e.translation},f(e.translation))}).catch(()=>{})}}function c(t){for(let e=0;e<t.textTracks.length;e++){const n=t.textTracks[e];n&&n.addEventListener("cuechange",y)}t.addEventListener("addtrack",(e=>{e.track&&e.track.kind==="subtitles"&&e.track.addEventListener("cuechange",y)}))}function x(t){const e=t.target,n=["::cue",".vjs-text-track-display",".ytp-caption-segment","[data-subtitle]",".subtitle-text"];let o="";for(const a of n)try{const u=e.closest(a);if(u){o=(u.textContent||"").trim();break}}catch{}o&&o.length>2&&(t.preventDefault(),t.stopPropagation(),b(o).catch(()=>{}))}function E(){document.querySelectorAll("video").forEach(c),new MutationObserver(n=>{for(const o of n)for(const a of o.addedNodes)a instanceof HTMLVideoElement&&c(a),a instanceof HTMLElement&&a.querySelectorAll("video").forEach(c)}).observe(document.body,{childList:!0,subtree:!0}),document.addEventListener("click",x,!0),document.addEventListener("keydown",n=>{n.altKey&&n.key==="s"&&(n.preventDefault(),i=!i,i||s(),console.log(`字幕翻译覆盖层: ${i?"开启":"关闭"}`)),n.key==="Escape"&&p()})}chrome.runtime.onMessage.addListener((t,e,n)=>(t.type==="TOGGLE_SUBTITLE_OVERLAY"&&(i=t.enabled??!i,i||s(),n({enabled:i})),t.type==="ENABLE_SUBTITLE_OVERLAY"&&(i=t.enabled??!i,i||s(),n({enabled:i})),!0));E();

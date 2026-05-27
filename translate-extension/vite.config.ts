@@ -6,7 +6,13 @@ const manifest = defineManifest({
   name: '智能翻译助手',
   version: '1.0.0',
   description: '选中网页/PDF/视频中的文字即可翻译，支持多语言切换',
-  permissions: ['storage', 'activeTab', 'scripting'],
+  permissions: ['storage', 'activeTab', 'scripting', 'contextMenus'],
+  commands: {
+    'translate-selection': {
+      suggested_key: { default: 'Alt+T', mac: 'Alt+T' },
+      description: '翻译当前选中文字',
+    },
+  },
   host_permissions: ['<all_urls>'],
   action: {
     default_popup: 'src/popup/popup.html',
