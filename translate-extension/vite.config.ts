@@ -36,6 +36,11 @@ const manifest = defineManifest({
       all_frames: true,
     },
     {
+      matches: ['<all_urls>'],
+      js: ['src/content/page-translate.ts'],
+      run_at: 'document_end',
+    },
+    {
       matches: ['*://*/*.pdf', 'file://*/*.pdf', '*://*/*.PDF'],
       js: ['src/content/pdf.ts'],
       run_at: 'document_end',

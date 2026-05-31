@@ -52,6 +52,15 @@
     },
     {
       "js": [
+        "assets/page-translate.ts-f9cNRPi9.js"
+      ],
+      "matches": [
+        "<all_urls>"
+      ],
+      "run_at": "document_end"
+    },
+    {
+      "js": [
         "assets/pdf.ts-loader-B3ey2vJ_.js"
       ],
       "matches": [
@@ -77,7 +86,8 @@
         "assets/translator-f8nY_rcK.js",
         "assets/languages-s6Qk9-53.js",
         "assets/webpage.ts-Ed5TPQJD.js",
-        "assets/subtitle.ts-CpzKjg4X.js"
+        "assets/subtitle.ts-CpzKjg4X.js",
+        "assets/page-translate.ts-f9cNRPi9.js"
       ],
       "use_dynamic_url": false
     },
