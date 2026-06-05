@@ -1,0 +1,20 @@
+import{dismiss as C,showTranslationPopup as O}from"./ui-DqoFrv1h.js";import"./translator-f8nY_rcK.js";import"./languages-s6Qk9-53.js";const L=[{name:"YouTube",containerSelector:".ytp-caption-window-container",textSelector:".ytp-caption-segment"}];let c=null,i=!1,h="",f=null,a=null,d="";const k="__tr-subtitle-overlay__";function A(){return c||(c=document.createElement("div"),c.id=k,c.style.cssText=`
+      all: initial;
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2147483647;
+      max-width: 720px;
+      padding: 8px 16px;
+      background: rgba(0,0,0,0.82);
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      border-radius: 8px;
+      text-align: center;
+      pointer-events: none;
+      display: none;
+      backdrop-filter: blur(4px);
+    `,document.body.appendChild(c)),c}function x(t){const e=A();e.textContent=t,e.style.display=""}function y(){c&&(c.style.display="none")}function _(t){if(!t.activeCues||t.activeCues.length===0)return"";const e=[];for(let n=0;n<t.activeCues.length;n++){const o=t.activeCues[n];o&&"text"in o&&e.push(o.text)}return e.join(" ").trim()}function S(t){if(i){if(f&&f.source===t){x(f.result);return}chrome.runtime.sendMessage({type:"TRANSLATE_SUBTITLE",text:t}).then(e=>{e!=null&&e.translation&&(f={source:t,result:e.translation},x(e.translation))}).catch(()=>{})}}function E(){const t=_(this);!t||t===h||(h=t,S(t))}function m(t){for(let e=0;e<t.textTracks.length;e++){const n=t.textTracks[e];n&&n.addEventListener("cuechange",E)}t.addEventListener("addtrack",(e=>{e.track&&e.track.kind==="subtitles"&&e.track.addEventListener("cuechange",E)}))}function p(t){if(t.offsetParent===null&&getComputedStyle(t).display==="none")return!1;const e=getComputedStyle(t);if(e.visibility==="hidden"||e.opacity==="0")return!1;const n=t.getBoundingClientRect();return!(n.width===0&&n.height===0)}function M(){for(const t of L){const e=document.querySelector(t.containerSelector);if(e&&p(e)){const r=e.querySelectorAll(t.textSelector),l=[];if(r.forEach(u=>{var v;const s=u;if(!p(s))return;const g=(v=s.textContent)==null?void 0:v.trim();g&&l.push(g)}),l.length>0)return l.join(" ");continue}const n=document.querySelectorAll(t.textSelector),o=[];if(n.forEach(r=>{var s;const l=r;if(!p(l))return;const u=(s=l.textContent)==null?void 0:s.trim();u&&o.push(u)}),o.length>0)return o.join(" ")}return""}function w(){const t=M();if(!t){d="";return}t!==d&&(d=t,h=t,S(t))}function b(){a||(a=setInterval(w,400))}function T(){a&&(clearInterval(a),a=null),d=""}function D(t){const e=t.target,n=["::cue",".vjs-text-track-display",".ytp-caption-segment","[data-subtitle]",".subtitle-text"];let o="";for(const r of n)try{const l=e.closest(r);if(l){o=(l.textContent||"").trim();break}}catch{}o&&o.length>2&&(t.preventDefault(),t.stopPropagation(),O(o).catch(()=>{}))}function I(){chrome.storage.sync.get(["subtitleOverlay"],n=>{n.subtitleOverlay===!0&&(i=!0)}),chrome.storage.onChanged.addListener(n=>{n.subtitleOverlay&&(i=n.subtitleOverlay.newValue===!0,i||y())}),document.querySelectorAll("video").forEach(m),new MutationObserver(n=>{for(const o of n)for(const r of o.addedNodes)r instanceof HTMLVideoElement&&m(r),r instanceof HTMLElement&&r.querySelectorAll("video").forEach(m)}).observe(document.body,{childList:!0,subtree:!0}),b(),document.addEventListener("click",D,!0),document.addEventListener("keydown",n=>{n.altKey&&n.key==="s"&&(n.preventDefault(),i=!i,i||y(),chrome.storage.sync.set({subtitleOverlay:i}).catch(()=>{})),n.key==="Escape"&&C()})}chrome.runtime.onMessage.addListener((t,e,n)=>(t.type==="TOGGLE_SUBTITLE_OVERLAY"&&(i=t.enabled??!i,i||y(),i?b():T(),n({enabled:i})),t.type==="ENABLE_SUBTITLE_OVERLAY"&&(i=t.enabled??!i,i||y(),i?b():T(),n({enabled:i})),!0));I();
