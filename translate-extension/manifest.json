@@ -16,6 +16,15 @@
   "host_permissions": [
     "<all_urls>"
   ],
+  "commands": {
+    "translate-selection": {
+      "suggested_key": {
+        "default": "Alt+T",
+        "mac": "Alt+T"
+      },
+      "description": "翻译选中的文字"
+    }
+  },
   "action": {
     "default_popup": "src/popup/popup.html",
     "default_title": "智能翻译助手",
