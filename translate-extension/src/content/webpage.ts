@@ -13,10 +13,6 @@ import { showTranslationPopup, dismiss } from '../lib/ui';
 /** Minimum characters selected to trigger translation */
 const MIN_SELECTION_LENGTH = 2;
 
-/** Debounce timer for selection changes */
-let selectionTimer: ReturnType<typeof setTimeout> | null = null;
-const DEBOUNCE_MS = 400;
-
 // ============================================
 // Selection handler
 // ============================================
@@ -50,30 +46,6 @@ function getSelectionRect(): DOMRect | undefined {
   return undefined;
 }
 
-function onSelectionChange(): void {
-  if (selectionTimer) clearTimeout(selectionTimer);
-
-  selectionTimer = setTimeout(() => {
-    const text = getSelectedText();
-
-    if (text.length >= MIN_SELECTION_LENGTH) {
-      const rect = getSelectionRect();
-      // Dismiss any stale popup before showing new one
-      dismiss();
-
-      // Small delay so the user can see the selection highlight
-      setTimeout(() => {
-        const currentText = getSelectedText();
-        if (currentText === text && currentText.length >= MIN_SELECTION_LENGTH) {
-          showTranslationPopup(currentText, rect).catch(() => {
-            // Translation failed — popup already shows error state
-          });
-        }
-      }, 200);
-    }
-  }, DEBOUNCE_MS);
-}
-
 // ============================================
 // Keyboard shortcut (Alt+T)
 // ============================================
@@ -99,7 +71,6 @@ function onKeyDown(e: KeyboardEvent): void {
 // Initialization
 // ============================================
 
-document.addEventListener('selectionchange', onSelectionChange);
 document.addEventListener('keydown', onKeyDown);
 
 // ============================================

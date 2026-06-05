@@ -32,7 +32,7 @@
   "content_scripts": [
     {
       "js": [
-        "assets/webpage.ts-loader-D2JIAuNR.js"
+        "assets/webpage.ts-loader-D7UCBbMU.js"
       ],
       "matches": [
         "<all_urls>"
@@ -85,7 +85,7 @@
         "assets/ui-DqoFrv1h.js",
         "assets/translator-f8nY_rcK.js",
         "assets/languages-s6Qk9-53.js",
-        "assets/webpage.ts-Ed5TPQJD.js",
+        "assets/webpage.ts-DPRIPEvZ.js",
         "assets/subtitle.ts-CpzKjg4X.js",
         "assets/page-translate.ts-f9cNRPi9.js"
       ],
